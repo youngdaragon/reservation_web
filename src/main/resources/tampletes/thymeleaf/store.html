@@ -1,0 +1,352 @@
+<!--<!DOCTYPE html>-->
+<html xmlns:th="http://www.thymeleaf.org" lang="ko" charset="UTF-8">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${store.store_name}"></title>
+  <link rel="stylesheet" th:href="@{/css/store.css}">
+  <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+</head>
+<script>
+  $(document).ready(function(){
+    $("#board").click(function() {
+      $(this).next(".menu").stop().slideToggle(300);
+      $(this).toggleClass('on').siblings().removeClass('on');
+      $(this).next(".menu").siblings(".menu").slideUp(300);
+    });
+  });
+  $(document).ready(function(){
+    $("#person_img").click(function() {
+      $(this).next(".menu").stop().slideToggle(300);
+      $(this).toggleClass('on').siblings().removeClass('on');
+      $(this).next(".menu").siblings(".menu").slideUp(300);
+    });
+  });
+</script>
+<body>
+<div id="nav_bar">
+  <div id="logo">
+    <a href="/"><img src="/img/logo.png" style="width:130px; height:60px;"/></a>
+  </div>
+
+  <div id="without_logo">
+    <div id="inner">
+      <div id="shop" style="margin-left: 16vw">
+        <a href="/shopAndEvent/shop">쿠폰상점</a>
+        <a href="/board/FAQ" style="margin-left: 8vw">FAQ</a>
+        <a href="/board/inquiry" style="margin-left: 8vw">1:1문의</a>
+      </div>
+      <div id="login_logout">
+        <div th:if="${session.logStatus!= 'Y'}"><a href="/register/loginForm">로그인</a></div>
+        <div class="menu">
+							<span>
+								<a th:if="${session.logStatus == 'Y' && session.isOwner==1}" href="/register/logout">로그아웃</a>
+								<a th:if="${session.logStatus == 'Y' && session.isOwner==1}" href="/ownerpage/ownerMyPage" style="margin-left: 30px">마이페이지</a>
+							</span>
+        </div>
+        <div class="menu">
+							<span>
+								<a th:if="${session.logStatus == 'Y' && session.isOwner==0}" href="/register/logout">로그아웃</a>
+								<a th:if="${session.logStatus == 'Y' && session.isOwner==0}" href="/user/myPage" style="margin-left: 30px">마이페이지</a>
+							</span>
+        </div>
+      </div>
+
+      <div id="join_balloon">
+        <div th:if ="${session.logStatus !='Y'}"><a href="/register/joinForm">회원가입</a></div>
+        <img th:if ="${session.logStatus=='Y' && session.isOwner==1 }"  src="/img/balloons.png" style="width:30px; height:30px; margin:0 auto;"/>
+        <p th:if ="${session.logStatus=='Y' && session.isOwner==0 }" style="color:#FF7100">&nbsp X<span th:text="${session.balloon}"></span></p>
+        <img th:if ="${session.logStatus=='Y'  && session.isOwner==0 }"  src="/img/balloons.png" style="width:30px; height:30px; margin:0 auto;"/>
+        <p th:if ="${session.logStatus=='Y'  && session.isOwner==0 }" style="color:#FF7100">&nbsp X<span th:text="${session.balloon}"></span></p>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="slideShow">
+  <ul id="bxslider">
+    <li th:each="img:${img}" style="text-align: center"><img th:src="${img}" class="main_img"></li>
+  </ul>
+</div>
+<span style="height: 100vh">
+<form th:action="@{/restaurant/{seq}(seq=${store.seq})}" method="post" id="reservation" onsubmit="return submitCheck()">
+  <input type="date" name="date" id="date" min="" max="">
+  <input type="text" name="time" id="time">
+  <select th:selected="${people}" id="people" name="people">
+    <option value="2">2명</option>
+    <option value="3">3명</option>
+    <option value="4">4명</option>
+    <option value="5">5명</option>
+    <option value="6">6명</option>
+    <option value="7">7명</option>
+    <option value="8">8명</option>
+  </select>
+      <select th:selected="${coupon}" id="coupon_use" name="coupon">
+        <option value="0">쿠폰 사용</option>
+        <option th:each="coupon:${coupon}" th:value="${coupon.discount_rate}" th:text="${coupon.discount_rate}"></option>
+      </select>
+  <input type="text" name="comment" placeholder="50자까지 입력" maxlength="50">
+  <input type="submit" value="예약하기" style="background-color: #ff7100; color: white">
+  </form>
+    <script>
+    function submitCheck() {
+      let store = "[[${store.store_name}]]";
+      let date = document.getElementById('date').value;
+      let time = document.getElementById('time').value;
+      let people = document.getElementById('people').value;
+      let coupon = document.getElementById('coupon_use').value;
+
+      let result = confirm(store+" "+date+"일 "+time + people+"명 예약하시겠습니까?\n쿠폰사용 : "+coupon+"%\n먹풍선 5개가 소모됩니다.");
+      if(result){
+        return true
+      }
+      else {
+        return false
+      }
+    }
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      let Day = new Date();
+      let todayYear = Day.getFullYear().toString();
+      let todayMonth = (Day.getMonth() + 1).toString().padStart(2, '0');  // 0부터 시작하므로 +1
+      let todayDay = Day.getDate().toString().padStart(2, '0');
+      let today = todayYear+'-'+todayMonth+'-'+todayDay;
+
+      let maxDay = new Date();
+      maxDay.setDate(Day.getDate()+14);
+      let maxDayYear = maxDay.getFullYear().toString();
+      let maxDayMonth = (maxDay.getMonth() + 1).toString().padStart(2, '0');
+      let maxDayDay = maxDay.getDate().toString().padStart(2, '0');
+      maxDay = maxDayYear+'-'+maxDayMonth+'-'+maxDayDay;
+
+      document.getElementById('date').setAttribute('min', today);
+      document.getElementById('date').setAttribute('max', maxDay);
+    });
+  </script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<script>
+$('#time').timepicker({
+    timeFormat: 'h:mm p',
+    interval: 60,
+    minTime: '10',
+    maxTime: '10:00pm',
+    defaultTime: '11',
+    startTime: '10:00',
+    dynamic: false,
+    dropdown: true,
+    scrollbar: true
+});
+</script>
+</span>
+<div id="store_inf">
+<div class="con">
+  <!--/* 음식점정보 */-->
+  <th:block th:object="${store}">
+      <div id="store_information">
+        <div style="width: 65vw">
+          <span><h2 th:text="*{store_name}" th:id="store_name" style="display: inline"></h2>
+            <span id="wishOff" class="wish" onclick="wishOn()">♡</span>
+            <span id="wishOn" class="wish" onclick="wishOff()">♥</span>
+          </span>
+          <script>
+            $(document).ready(function(){
+              let wish =[[${wish}]];
+              if (wish == 1){
+                document.getElementById('wishOff').style.display = "none";
+              }
+              else {
+                document.getElementById('wishOn').style.display = "none";
+              }
+            });
+            function wishOn() {
+              let log = '[[${session.logStatus}]]'
+              if(log=='Y'){
+              fetch("/wishUpdate?seq="+[[${store.seq}]]+"&wish=true",{
+                method: "GET",
+              }).then($('#wishOn').show()).then($('#wishOff').hide());
+            }else{
+                alert('로그인 후 이용해주세요!')
+              }
+            }
+
+            function wishOff() {
+              let log = '[[${session.logStatus}]]'
+              if(log=='Y'){
+              fetch("/wishUpdate?seq="+[[${store.seq}]]+"&wish=false",{
+                method: "GET",
+              }).then($('#wishOn').hide()).then($('#wishOff').show());
+            }else {
+                alert('로그인 후 이용해주세요!')
+              }
+            }
+          </script>
+          <span th:id="score_" style="font-size: x-large"><span id="star">★</span><span th:text="*{score}" id="score"></span></span>
+        </div>
+        <hr style="width: 54.8vw;margin-left: 0;">
+        <table>
+          <tbody>
+          <tr>
+            <th>주소</th>
+            <td th:text="*{location}" class="specific"></td>
+          </tr>
+          <div id="map" style="width:70%;height:350px;"></div>
+          <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bf51c8be3f9bf6ff5d80d7217305cd1b&libraries=services"></script>
+          <script>
+            var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                    mapOption = {
+                      center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+                      level: 3 // 지도의 확대 레벨
+                    };
+
+            // 지도를 생성합니다
+            var map = new kakao.maps.Map(mapContainer, mapOption);
+
+            // 주소-좌표 변환 객체를 생성합니다
+            var geocoder = new kakao.maps.services.Geocoder();
+
+            // 주소로 좌표를 검색합니다
+            geocoder.addressSearch([(${store.location})], function(result, status) {
+
+              // 정상적으로 검색이 완료됐으면
+              if (status === kakao.maps.services.Status.OK) {
+
+                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                // 결과값으로 받은 위치를 마커로 표시합니다
+                var marker = new kakao.maps.Marker({
+                  map: map,
+                  position: coords
+                });
+
+                // 인포윈도우로 장소에 대한 설명을 표시합니다
+                var infowindow = new kakao.maps.InfoWindow({
+                  content: '<div style="width:150px;text-align:center;padding:6px 0;">[[${store.store_name}]]</div>'
+                });
+                infowindow.open(map, marker);
+
+                // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                map.setCenter(coords);
+              }
+              function zoomIn() {
+                // 현재 지도의 레벨을 얻어옵니다
+                var level = map.getLevel();
+
+                // 지도를 1레벨 내립니다 (지도가 확대됩니다)
+                map.setLevel(level - 1);
+
+                // 지도 레벨을 표시합니다
+                displayLevel();
+              }
+
+              function zoomOut() {
+                // 현재 지도의 레벨을 얻어옵니다
+                var level = map.getLevel();
+
+                // 지도를 1레벨 올립니다 (지도가 축소됩니다)
+                map.setLevel(level + 1);
+
+                // 지도 레벨을 표시합니다
+                displayLevel();
+              }
+            });
+          </script>
+          <tr>
+            <th>전화번호</th>
+            <td th:text="*{tel_number}" class="specific"></td>
+          </tr>
+          <tr>
+            <th>음식종류</th>
+            <td th:text="*{category}" class="specific"></td>
+          </tr>
+          <tr>
+            <th>영업시간</th>
+            <td th:text="|*{open_time} ~ *{close_time}|" class="specific"></td>
+          </tr>
+          <tr>
+            <th>오시는 길</th>
+            <td th:text="*{how_to_come}" class="specific"></td>
+          </tr>
+          <tr>
+            <th>편의시설</th>
+            <td th:text="${facility}" class="specific"></td>
+          </tr>
+          <tr>
+            <th>사장님 한마디</th>
+            <td th:text="*{comment}" class="specific"></td>
+          </tr>
+          </tbody>
+        </table>
+        <h2 class="menus">메뉴</h2>
+        <hr class="menus">
+  <div class="menus"><!--/* 메뉴 */-->
+    <br>
+        <th:block th:each="menu:${menus}">
+          <div id="menu">
+            <img th:src="${menu.picture_location}" style="width: 25vw;height: 20vh; max-width: 350px; max-height: 250px">
+            <div id="menu_inf">
+            <span th:text="${menu.menu_name}"></span>
+            <span th:text="${menu.price}"></span>
+            </div>
+          </div>
+        </th:block>
+  </div>
+  <h2>리뷰</h2>
+        <hr>
+  <div><!--/* 리뷰 */-->
+    <div th:each="review:${reviews}">
+      <div class="review_container">
+      <span th:field="${review.user_id}" th:text="${review.user_id}" class="review_name"></span>
+      <span style="float:right; color: #FF7100; font-size: larger">★
+      <span th:field="${review.score}" th:text="${review.score}"></span>
+      </span>
+      <p th:field="${review.review_time}" th:text="${review.review_time}" class="review_time"></p>
+      <p th:field="${review.review}" th:text="${review.review}"></p>
+      <img th:src="@{${review.file_location}}" class="review_img">
+      <div th:if="${review.owner_comment} != null" class="owner_review">
+        <p th:field="${review.owner_id}" th:text="${review.owner_id}" class="review_name" style="position: absolute; top: 5px;"></p>
+        <p th:field="${review.owner_comment}" th:text="${review.owner_comment}" style="margin-top: 20px; padding-bottom: 20px"></p>
+      </div>
+      <hr>
+      </div>
+    </div>
+    <div th:if="${reviews.size()==0}">
+      리뷰가 없습니다 방문하고 첫번째 리뷰를 남겨보세요!
+    </div>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/jquery.bxslider.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#bxslider').bxSlider({
+      mode: 'horizontal', // 가로 방향 수평 슬라이드
+      speed: 500, // 이동 속도를 설정
+      pager: false, // 현재 위치 페이징 표시 여부 설정
+      moveSlides: 1, // 슬라이드 이동시 개수
+      slideWidth: 1500, // 슬라이드 너비 수정
+      slideHeight: 1000, // 슬라이드 높이 수정
+      maxSlides: 3, // 최대 노출 개수 수정
+      slideMargin: 50, // 슬라이드간의 간격
+      auto: true, // 자동 실행 여부
+      autoHover: true, // 마우스 호버시 정지 여부
+      controls: true // 이전 다음 버튼 노출 여부
+    });
+  });
+</script>
+    <footer>
+      <div id="footer" style="width:100%; height:25%; background:rgb(49,55,63); bottom:0; margin-top:100px; font-size:14px; position: relative">
+        <div style="color:#fff;"><img src="/img/logo_r.png" style="width:90px; height:45px; margin-top:30px; margin-left:20px;"> | 개인정보처리방침 | 이용약관</div>
+        <div style="color:#fff; margin-top:40px; margin-left:20px;">
+          (주)먹스케쥴 [mukschedule@gmail.com]<br/>
+          <p style="margin-bottom:5px;">Developers<br/></p>
+          <a href="https://github.com/kwh1208>Kwon"> woohyun</a> |
+          <a href="https://github.com/yongtae>Kim"> yongtae</a> |
+          <a href="https://github.com/soomin>Cheon"> soomin</a> |
+          <a href="https://github.com/wldbs98>Hyun"> Jiyoon</a>
+        </div>
+      </div>
+    </footer>
+</body>
+</html>

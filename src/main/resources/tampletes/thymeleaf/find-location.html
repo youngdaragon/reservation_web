@@ -1,0 +1,142 @@
+<!--<!DOCTYPE html>-->
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/css/location.css"/>
+  <title th:text="${district}"></title>
+</head>
+<body>
+<div id="nav_bar">
+    <div id="logo">
+        <a href="/"><img src="/img/logo.png" style="width:130px; height:60px;"/></a>
+    </div>
+
+    <div id="without_logo">
+        <div id="inner">
+            <div id="shop" style="margin-left: 16vw">
+                <a href="/shopAndEvent/shop">쿠폰상점</a>
+                <a href="/board/FAQ" style="margin-left: 8vw">FAQ</a>
+                <a href="/board/inquiry" style="margin-left: 8vw">1:1문의</a>
+            </div>
+            <div id="login_logout">
+                    <div th:if="${session.logStatus!= 'Y'}"><a href="/register/loginForm">로그인</a></div>
+                    <div class="menu">
+							<span>
+								<a th:if="${session.logStatus == 'Y' && session.isOwner==1}" href="/register/logout">로그아웃</a>
+								<a th:if="${session.logStatus == 'Y' && session.isOwner==1}" href="/ownerpage/ownerMyPage" style="margin-left: 30px">마이페이지</a>
+							</span>
+                    </div>
+                    <div class="menu">
+							<span>
+								<a th:if="${session.logStatus == 'Y' && session.isOwner==0}" href="/register/logout">로그아웃</a>
+								<a th:if="${session.logStatus == 'Y' && session.isOwner==0}" href="/user/myPage" style="margin-left: 30px">마이페이지</a>
+							</span>
+                    </div>
+            </div>
+
+            <div id="join_balloon">
+                <div th:if ="${session.logStatus !='Y'}"><a href="/register/joinForm">회원가입</a></div>
+                <img th:if ="${session.logStatus=='Y' && session.isOwner==1 }"  src="/img/balloons.png" style="width:30px; height:30px; margin:0 auto;"/>
+                <p th:if ="${session.logStatus=='Y' && session.isOwner==1 }" style="color:#FF7100">&nbsp X<span th:text="${session.balloon}"></span></p>
+                <img th:if ="${session.logStatus=='Y'  && session.isOwner==0 }"  src="/img/balloons.png" style="width:30px; height:30px; margin:0 auto;"/>
+                <p th:if ="${session.logStatus=='Y'  && session.isOwner==0 }" style="color:#FF7100">&nbsp X<span th:text="${session.balloon}"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="text-align: center; background-color: rgb(230,230,230); position: absolute; top: 0; width: 100%; padding-top: 70px">
+    <p th:text="|${district} 먹풍리스트|" style="font-size: x-large; text-shadow: 1px 1px 1px gray"></p>
+    <p style="color: #9b9b9b">"뭐 먹을지 고민돼? 이 집은 어때?"</p>
+</div>
+<div id="slideShow">
+    <ul id="bxslider">
+        <th:block th:if="${promotionList != null}">
+            <th:block th:each="List:${promotionList}" th:if="${List != null}">
+                <a th:href="@{/restaurant/{seq}(seq=${List.seq})}">
+                    <li style="text-align: center">
+                        <img th:src="${List.picture_location}" class="promotion_img">
+                        <br>
+                        <p th:text="|${List.store_name} ★ ${List.score}|" style="display: inline;color: #ff7100;font-size: large;font-weight: bold"></p>
+                    </li>
+                </a>
+            </th:block>
+        </th:block>
+    </ul>
+</div>
+<form action="./search" method="get" id="district_category">
+    <select name="district" id="area" class="select">
+      <th:block th:each="area:${region}">
+      <option th:selected="${area}==${district}" th:text="${area}" th:value="${area}"></option>
+      </th:block>
+    </select>
+  <select name="category" th:label="category" class="select" id="category">
+    <option value="">분류</option>
+    <th:block th:each="categorys:${AllCategory}">
+    <option th:each="val:${categorys}" th:value="${categorys}" th:id="${categorys}" th:text="${categorys}" ></option>
+    </th:block>
+      <input type="text" name="store_name" id="name" placeholder="가게이름으로 검색">
+  </select>
+  <button type="submit" id="district_category_button" class="button">검색</button>
+</form>
+
+<form action="" method="get" id="sort">
+    <input type="hidden" name="district" th:value="${district}">
+    <input type="hidden" name="category" th:value="${category}">
+  <button class="sort_btn" value="score" th:class="button" name="sort">평점순</button>
+  <button class="sort_btn" value="review" th:class="button" id="sort_review" name="sort">리뷰많은순</button>
+  <button class="sort_btn" value="wish" th:class="button" name="sort">찜목록 많은순</button>
+</form>
+<div th:id="stores">
+    <th:block>
+        <div th:each="store:${stores}" class="store">
+            <div>
+                <a th:href="@{/restaurant/{seq}(seq=${store.seq})}">
+                    <img th:src="@{${store.picture_location}}" class="store_img">
+                </a>
+            </div>
+            <div class="store_information">
+                <a th:href="@{/restaurant/{seq}(seq=${store.seq})}">
+                    <span th:text="${store.store_name}" id="store_name">가게이름</span>
+                </a>
+                <span id="star">★<span th:text="${store.score}" id="score">평점</span></span>
+            </div>
+        </div>
+    </th:block>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/jquery.bxslider.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#bxslider').bxSlider({
+            mode: 'horizontal', // 가로 방향 수평 슬라이드
+            speed: 500, // 이동 속도를 설정
+            pager: false, // 현재 위치 페이징 표시 여부 설정
+            moveSlides: 1, // 슬라이드 이동시 개수
+            slideWidth: 1500, // 슬라이드 너비 수정
+            slideHeight: 1000, // 슬라이드 높이 수정
+            maxSlides: 3, // 최대 노출 개수 수정
+            slideMargin: 50, // 슬라이드간의 간격
+            auto: true, // 자동 실행 여부
+            autoHover: true, // 마우스 호버시 정지 여부
+            controls: true, // 이전 다음 버튼 노출 여부
+            touchEnabled : (navigator.maxTouchPoints > 0)
+        });
+    });
+</script>
+<footer>
+    <div id="footer" style="width:100%; height:25%; background:rgb(49,55,63); bottom:0; margin-top:100px; font-size:14px; position: relative">
+        <div style="color:#fff;"><img src="/img/logo_r.png" style="width:90px; height:45px; margin-top:30px; margin-left:20px;"> | 개인정보처리방침 | 이용약관</div>
+        <div style="color:#fff; margin-top:40px; margin-left:20px;">
+            (주)먹스케쥴 [mukschedule@gmail.com]<br/>
+            <p style="margin-bottom:5px;">Developers<br/></p>
+            <a href="https://github.com/kwh1208>Kwon"> woohyun</a> |
+            <a href="https://github.com/yongtae>Kim"> yongtae</a> |
+            <a href="https://github.com/soomin>Cheon"> soomin</a> |
+            <a href="https://github.com/wldbs98>Hyun"> Jiyoon</a>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
+</body>
+</html>
