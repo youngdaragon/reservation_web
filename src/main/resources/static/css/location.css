@@ -1,0 +1,249 @@
+*{
+    position: relative;
+}
+body, ul, li{
+    padding:0;
+    margin:0;
+    list-style-type:none;
+}
+a{
+    text-decoration:none;
+    color:#FF7100;
+}
+
+/*------------header------------*/
+#nav_bar{
+    background-color:white;
+    width:100%;
+    display:flex;
+    flex-direction:row;
+    height:60px;
+    line-height:60px;
+    align-items:center;
+    box-shadow:0 7px 7px -7px #FF7100;
+    padding:10px 0 10px 10px;
+    top:0;
+    z-index: 2;
+}
+#logo, #shop, #FAQ, #inquiry, #login_logout, #join_balloon, img{
+    height:80px;
+}
+#nav_bar div{
+    float:left;
+}
+#login_logout, #join_balloon{
+    display:flex;
+    align-items:center;
+}
+#logo{
+    margin-left:7%;
+    margin-top:15px;
+}
+#without_logo{
+    width:90%;
+    display:flex;
+}
+#inner{
+    width:90%;
+    margin:0 auto;
+}
+#shop{
+    line-height:80px;
+}
+#login_logout{
+    margin-left:16.7%;
+    margin-right:3.3%;
+}
+#FAQ, #inquiry{
+    line-height:80px;
+}
+#FAQ{
+    margin-right:16.7%;
+}
+.person_img{
+    position: relative;
+    cursor: pointer;
+    line-height:80px;
+}
+
+.person_img::before{
+    display: inline-block;
+    color: #006633;
+}
+
+.person_img.on>span{
+    color: #006633;
+}
+
+.menu2 {
+    display: none;
+    overflow: hidden;
+    background-color: #f4f4f2;
+    line-height:30px;
+    position: absolute; transform: translateY(-50%);
+    margin-top:240px;
+    padding:10px;
+}
+
+.menu2::before {
+    display: inline-block;
+    color: #666;
+    margin: 0 5px;
+}
+.button{
+    border: 1px solid #FF7100;
+    background-color:#FF7100;
+    color: white;
+    border-radius: 25px;
+    width: 200px;
+    height: 35px;
+}
+.select{
+    width: 200px;
+    border: 1px solid #FF7100;
+    box-sizing: border-box;
+    border-radius: 10px;
+    padding: 12px 13px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    appearance: none;
+    text-align: center;
+}
+.pl:focus{
+    border: 1px solid #FF7100;
+    box-sizing: border-box;
+    border-radius: 10px;
+    outline: 3px solid #FF7100;
+    border-radius: 10px;
+}
+#district_category{
+    min-height: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15vh;
+}
+#category{
+    margin-left: 3%;
+    margin-right: 3%;
+}
+#sort{
+    min-height: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10vh;
+}
+#drop{
+    margin-top: 8.5px;
+}
+#sort_review{
+    margin-left: 10%;
+    margin-right: 10%;
+}
+#stores{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+#store_name{
+    font-weight: bold;
+    font-size: large;
+}
+#star{
+    color:#FF7100;
+    margin-left: 1vw;
+}
+#store{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-left: 1vw;
+    height: 25vh;
+    max-width: 258.375px;
+}
+.store_img{
+    width: 100%;
+    height: 16vh;
+}
+.bx-wrapper {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 0;
+}
+li {
+    list-style-type: none;
+}
+option{
+    text-align: center;
+}
+#slideShow{
+    max-width: 1000px;
+    margin: auto;
+    margin-top: 13vh;
+}
+.bx-viewport{
+    height: 300px;
+}
+.bx-wrapper{
+    height: 400px;
+}
+.bxslider{
+    text-align: center;
+}
+.bx-next{
+    float: right;
+}
+.bx-wrapper .bx-prev {
+    background: url(/img/prev.png) no-repeat center center;
+    width: 50px;
+    height: 50px;
+    float: left;
+    z-index: 2;
+    color: white;
+}
+.bx-wrapper .bx-next {
+    background: url(/img/next.png) no-repeat center center;
+    width: 50px;
+    height: 50px;
+    float: right;
+    z-index: 2;
+    color: white;
+}
+.store_information{
+    width: 23vw;
+}
+.store{
+    border: lightgray 2px solid;
+    margin-left: 1vw;
+    margin-top: 1vw;
+    width: 27vw;
+    max-width: 305px;
+}
+.promotion{
+    text-align: center;
+}
+.promotion_img{
+    width: 800px;
+    height: 350px;
+}
+.promotion_inf{
+    width: 300px;
+}
+#name{
+    border: 1px solid #FF7100;
+    box-sizing: border-box;
+    border-radius: 10px;
+    padding: 12px 13px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    appearance: none;
+    margin-right: 3%;
+}

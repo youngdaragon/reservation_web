@@ -1,0 +1,285 @@
+*{
+    position: relative;
+}
+body, ul, li{
+    padding:0;
+    margin:0;
+    list-style-type:none;
+}
+a{
+    text-decoration:none;
+    color:#FF7100;
+}
+#nav_bar{
+    background-color:white;
+    width:100%;
+    display:flex;
+    flex-direction:row;
+    height:60px;
+    line-height:60px;
+    align-items:center;
+    box-shadow:0 7px 7px -7px #FF7100;
+    padding:10px 0 10px 10px;
+    top:0;
+    z-index: 2;
+}
+#logo, #shop, #FAQ, #inquiry, #login_logout, #join_balloon, img{
+    height:80px;
+}
+#nav_bar div{
+    float:left;
+}
+#login_logout, #join_balloon{
+    display:flex;
+    align-items:center;
+}
+#logo{
+    margin-left:7%;
+    margin-top:15px;
+}
+#without_logo{
+    width:90%;
+    display:flex;
+}
+#inner{
+    width:90%;
+    margin:0 auto;
+}
+#shop{
+    line-height:80px;
+}
+#login_logout{
+    margin-left:16.7%;
+    margin-right:3.3%;
+}
+#FAQ, #inquiry{
+    line-height:80px;
+}
+#FAQ{
+    margin-right:16.7%;
+}
+.person_img{
+    position: relative;
+    cursor: pointer;
+    line-height:80px;
+}
+
+.person_img::before{
+    display: inline-block;
+    color: #006633;
+}
+
+.person_img.on>span{
+    color: #006633;
+}
+
+.menu2 {
+    display: none;
+    overflow: hidden;
+    background-color: #f4f4f2;
+    line-height:30px;
+    position: absolute; transform: translateY(-50%);
+    margin-top:240px;
+    padding:10px;
+}
+
+.menu2::before {
+    display: inline-block;
+    color: #666;
+    margin: 0 5px;
+}
+#slideShow {
+    /*전체 컨테이너*/
+    width: 800px;
+    height: 400px;
+    position: relative;
+    margin: 50px auto;
+    overflow: hidden; /*리스트 형식으로 이미지를 일렬로 정렬할 것이기 때문에, 500px 밖으로 튀어 나간 이미지들은 hidden으로 숨겨줘야됨*/
+}
+.slides {
+    /*이미지들이 담겨있는 슬라이드 컨테이너*/
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2500px; /* 슬라이드할 사진과 마진 총 넓이 */
+    transition: 0.5s ease-out; /*ease-out: 처음에는 느렸다가 점점 빨라짐*/
+    height: 200px;
+} /* 첫 번째 슬라이드 가운데에 정렬하기위해 첫번째 슬라이드만 margin-left조정 */
+.slides li img{
+    height: 200px;
+}
+.slides li:first-child {
+    margin-left: 100px;
+} /* 슬라이드들 옆으로 정렬 */
+.slides li:not(:last-child) {
+    float: left;
+    margin-right: 100px;
+}
+.controller span {
+    position: absolute;
+    background-color: transparent;
+    color: black;
+    text-align: center;
+    border-radius: 50%;
+    padding: 10px 20px;
+    top: 50%;
+    font-size: 1.3em;
+    cursor: pointer;
+    margin-top: 11vh;
+} /* 이전, 다음 화살표에 마우스 커서가 올라가 있을때 */
+.controller span:hover {
+    background-color: rgba(128, 128, 128, 0.11);
+}
+#store_img{
+    margin-left:120px;
+    padding-left:50px;
+    margin-top:-140px;
+}
+.bx-wrapper {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;     // 그림자 없애기
+border: 0;
+}
+.prev {
+    left: 10px;
+} /* 이전 화살표에 마우스 커서가 올라가 있을때 이전 화살표가 살짝 왼쪽으로 이동하는 효과*/
+.prev:hover {
+    transform: translateX(-10px);
+}
+.next {
+    right: 10px;
+} /* 다음 화살표에 마우스 커서가 올라가 있을때 이전 화살표가 살짝 오른쪽으로 이동하는 효과*/
+.next:hover {
+    transform: translateX(10px);
+}
+ul{
+    list-style: none;
+}
+#reservation{
+    display: flex;
+    position: sticky;
+    top: 5vh;
+    right: 10vw;
+    width: 250px;
+    float: right;
+    flex-direction: column;
+    z-index: 2;
+}
+#store_inf{
+    position: relative;
+}
+#score{
+    float: right;
+}
+th{
+    text-align: left;
+}
+.store_img{
+    height: 400px;
+    width: 400px;
+    margin: 0px;
+    padding: 0px;
+}
+.bxslider{
+    display: inline;
+}
+#store_information{
+    margin-left: 10vw;
+    margin-right: 10vw;
+}
+#score_{
+    float: right;
+    margin-right: 10vw;
+}
+#score{
+    color:#FF7100;
+}
+#star{
+    color:#FF7100;
+}
+#wish{
+    color: red;
+    margin-left: 5px;
+}
+#menus{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-left: 1vw;
+}
+#menu{
+    display: inline-block;
+    width: 38vw;
+    height: 25vw;
+}
+.bx-viewport{
+    height: 300px;
+}
+.bx-wrapper{
+    height: 400px;
+}
+.bxslider{
+    text-align: center;
+}
+.bx-next{
+    float: right;
+}
+.bx-wrapper .bx-prev {
+    background: url(/img/prev.png) no-repeat center center;
+    width: 50px;
+    height: 50px;
+    float: left;
+    z-index: 2;
+    color: white;
+}
+.bx-wrapper .bx-next {
+    background: url(/img/next.png) no-repeat center center;
+    width: 50px;
+    height: 50px;
+    float: right;
+    z-index: 2;
+    color: white;
+}
+.review_time{
+    text-align: left;
+    color: #7d7d7d;
+}
+.review_name{
+    font-weight: 900;
+}
+.review_container:hover{
+    background-color: lightgray;
+}
+.main_img{
+    height: 340px;
+    text-align: center;
+}
+.owner_review::before{
+    content: "";
+    width: 10px;
+    top: 1em;
+    right: 4.4em;
+    border: 1em solid transparent;
+    border-right: 1em solid rgb(230, 229, 234);
+    z-index: 0;
+    position: relative;
+    display: block;
+}
+.owner_review{
+    margin-left: 70px;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    border-right: 1em solid rgb(230, 229, 234);
+    background-color: rgb(230, 229, 234);
+    border-radius: 15px;
+    padding-left: 1.8em;
+    padding-right: 1.8em;
+    margin-top: 20px;
+}
+.wish{
+    color: red;
+    font-size: x-large;
+}
