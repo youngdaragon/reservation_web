@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eat_schedule.dao.BoardDAO">
+	<insert id="inquiryInsert" parameterType="java.util.HashMap">
+		insert into qna(user_id, picture_location, question_title, question, question_time, filename)
+		values(#{id}, #{location}, #{title}, #{content}, NOW(), #{filename})
+	</insert>
+	<select id="inquiryAllSelect" resultType="eat_schedule.dto.BoardDTO">
+		select * from qna where user_id=#{param1}
+	</select>
+	<select id="inquirySelect" resultType="eat_schedule.dto.BoardDTO">
+		select * from qna where seq = ${seq}
+	</select>
+	<select id="inquiryEditSelect" resultType="eat_schedule.dto.BoardDTO">
+		select seq, user_id, question_title, question from qna
+		where seq=${seq} and user_id=#{user_id}
+	</select>
+	<select id="filenameSelect" resultType="java.lang.String">
+		select ifnull(filename, '') from qna where seq = ${seq}
+	</select>
+	<delete id="inquiryDelete">
+		delete from qna where seq=${param1} and user_id=#{param2}
+	</delete>
+	<update id="inquiryEditUpdate" parameterType="java.util.HashMap">
+		update qna set user_id=#{id}, picture_location=#{location}, question_title=#{title}, question=#{content}, 
+		question_time=NOW(), filename=#{filename} where seq=${seq}
+	</update>
+</mapper>

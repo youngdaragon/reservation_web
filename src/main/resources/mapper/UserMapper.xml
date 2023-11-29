@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eat_schedule.dao.UserDAO">
+	<select id="loginOk" resultType="eat_schedule.dto.UserDTO">
+ 		select user_id, user_name, is_owner from user
+ 		where user_id=#{param1} and user_password=#{param2}
+ 	</select>
+	<select id="UserEdit" resultType="eat_schedule.dto.UserDTO">
+	 	select user_id, user_name, nickname, phone_number, email from user
+ 		where user_id=#{param1}
+	</select>
+	<select id="UserSelect" resultType="eat_schedule.dto.UserDTO">
+		select user_id, user_name, balloon from user
+		where user_id=#{param1}
+	</select>
+	<update id="UserEditOk">
+		update user
+		set
+		nickname=#{nickname},
+		phone_number=#{phone_number},
+		email=#{email}
+		where user_id=#{user_id} and user_password=#{user_password}
+	</update>
+</mapper>

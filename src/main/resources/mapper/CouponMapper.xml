@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eat_schedule.dao.CouponDAO">
+	<select id="CouponSelect" resultType="eat_schedule.dto.CouponDTO">
+		select c.seq, s.store_name, c.discount_rate, c.expired_period from coupon c
+	 	join store s on s.seq=c.store_seq
+		where user_id=#{param1}
+	</select>
+	<select id="CouponCount" resultType="int">
+		select count(*) from coupon
+		where user_id=#{param1}
+	</select>
+	<delete id="CouponDelete">
+		delete from coupon where seq=${seq}
+	</delete>
+</mapper>

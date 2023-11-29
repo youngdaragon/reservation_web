@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eat_schedule.dao.ReservationDAO">
+	<select id="ReservationSelect" resultType="eat_schedule.dto.ReservationDTO">
+	 	select r.seq, r.store_seq, s.store_name, r.reservation_time, r.number_of_people, u.user_name, u.phone_number, r.reservation_status, r.reservation_comment
+		from reservation r
+		join user u on u.user_id=r.user_id
+		join store s on s.seq=r.store_seq
+		where u.user_id=#{param1}
+	</select>
+	<select id="ReviewWrite" resultType="eat_schedule.dto.ReservationDTO">
+		select r.seq, r.store_seq, s.store_name 
+		from reservation r
+		join store s on s.seq=r.store_seq
+		where r.seq=#{param1}
+	</select>
+	<delete id="ReservationDelete">
+		delete from reservation where seq=${seq}
+	</delete>
+</mapper>

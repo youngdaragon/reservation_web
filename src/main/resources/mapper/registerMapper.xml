@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eat_schedule.dao.RegisterDAO">
+	<select id="loginOk" resultType="eat_schedule.dto.RegisterDTO">
+ 		select user_id, user_name, is_owner, balloon from user where user_id=#{param1} and user_password=#{param2}
+ 	</select>
+ 	<select id="idCheckCount" resultType="int">
+ 		select count(user_id) cnt from user where user_id=#{param1}
+ 	</select>
+ 	<select id="nicknameCheckCount" resultType="int">
+ 		select count(nickname) cnt from user where nickname=#{param1}
+ 	</select>
+ 	<insert id="registerInsert">
+ 		insert into user(user_id, user_password, user_name, nickname, email, gender, is_owner, phone_number, balloon, join_date)
+ 		values(#{user_id}, #{user_password}, #{user_name}, #{nickname}, #{email}, ${gender}, ${is_owner}, #{phone_number}, 15,  NOW())
+ 	</insert>
+ 	<select id="idSearch" resultType="string">
+ 		select rpad(substr(user_id,1,length(user_id)/2),length(user_id),'*') user_id from user where user_name=#{param1} and email=#{param2}
+ 	</select>
+ 	<select id="passwordSearch" resultType="string">
+ 		select rpad(substr(user_password,1,length(user_password)/2),length(user_password),'*') user_password from user where user_name=#{param1} and email=#{param2} and user_id=#{param3}
+ 	</select>
+ 	<insert id="balloonGetInsert">
+ 		insert into balloon(user_id, use_get_time, balloon, content)
+ 		values(#{user_id}, NOW(), 15, "회원가입")
+ 	</insert>
+</mapper>

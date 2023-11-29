@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eat_schedule.dao.ShopAndEventDAO">
+	<select id="selectCoupon" resultType="eat_schedule.dto.ShopDTO">
+		select seq, discount_rate, balloon_number from shop
+	</select>
+	<select id="selectUser" resultType="eat_schedule.dto.RegisterDTO">
+		select user_id, balloon from user where user_id=#{user_id}
+	</select>
+	<insert id="couponInsertOk">
+		insert into coupon(user_id, expired_period, discount_rate)
+		values(#{user_id}, DATE_ADD(NOW(), INTERVAL 1 MONTH), ${discount_rate})
+	</insert>
+	<update id="userUpdateOk">
+		update user set balloon = (balloon-(select balloon_number from shop where seq=${seq})) where user_id=#{id}
+	</update>
+	<insert id="balloonUseInsert">
+		insert into balloon(user_id, use_get_time, balloon,  content)
+		values(#{id}, NOW(), -(select balloon_number from shop where seq=${seq}), "상점에서 쿠폰구매")
+	</insert>
+	
+</mapper>

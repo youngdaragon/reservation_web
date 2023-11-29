@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eat_schedule.mapper.OwnerDAO">
+<select id="storeSelect" resultType="eat_schedule.dto.StoreDTO">
+	select * from store where owner_id=#{param1}
+</select>
+<select id="reservationNoCheck" resultType="int">
+	select count(seq) from reservation where store_seq=${param1} and reservation_status="예약 대기";
+</select>
+<insert id="storeRegisterOk" parameterType="eat_schedule.dto.StoreDTO" useGeneratedKeys="true" keyProperty="seq">
+	insert into store(owner_id, store_name, location, tel_number, owner_comment, open_time, close_time, how_to_come, parking, wifi, animal, group_customer, playroom, disabled, district)
+	values(#{owner_id}, #{store_name}, #{location}, #{tel_number}, #{owner_comment}, #{open_time}, #{close_time}, #{how_to_come}, #{parking}, #{wifi}, #{animal}, #{group_customer}, #{playroom}, #{disabled}, #{district})
+</insert>
+<select id="storeInfoEdit" resultType="eat_schedule.dto.StoreDTO">
+	select seq, owner_id, store_name, location, tel_number, owner_comment, open_time, close_time, how_to_come, parking, wifi, animal, group_customer, playroom, disabled, district from store
+	where seq=${param1}
+</select>
+<update id="storeInfoEditOk" parameterType="eat_schedule.dto.StoreDTO">
+	update store set store_name=#{store_name}, location=#{location}, tel_number=#{tel_number}, owner_comment=#{owner_comment}, open_time=#{open_time}, close_time=#{close_time}
+	, how_to_come=#{how_to_come}, parking=#{parking}, wifi=#{wifi}, animal=#{animal}, group_customer=#{group_customer}, playroom=#{playroom}, disabled=#{disabled}, district=#{district} where seq=${seq}
+</update>
+<select id="userInfoEdit" resultType="eat_schedule.dto.RegisterDTO">
+	select user_id, user_password, user_name, nickname, is_owner, phone_number, gender, email, balloon, join_date from user
+	where user_id=#{param1}
+</select>
+<update id="userInfoEditOk">
+	update user set user_name=#{user_name}, nickname=#{nickname}, phone_number=#{phone_number}
+	, email=#{email} where user_id=#{user_id} and user_password=#{user_password}
+</update>
+<select id="reviewSelect" resultType="eat_schedule.dto.ReviewDTO">
+	select * from review where store_seq=${param1} order by seq desc
+</select>
+<select id="reviewOwnerCommentSelect" resultType="eat_schedule.dto.ReviewDTO">
+	select * from review where store_seq=${param1} and owner_comment is null order by seq desc
+</select>
+<select id="reviewCouponSelect" resultType="eat_schedule.dto.ReviewDTO">
+	select * from review where store_seq=${param1} and coupon_status=${param2} order by seq desc
+</select>
+<select id="storeScore" resultType="Double">
+	select round(avg(score), 1) from review where store_seq=${param1};
+</select>
+<select id="reservationSelect" resultType="eat_schedule.dto.ReservationDTO">
+	select r.seq ,r.reservation_time, r.number_of_people, r.user_id, u.user_name, r.coupon, u.phone_number, u.email, r.reservation_status, r.reservation_comment, r.visit_status
+		from reservation r
+		join user u on u.user_id=r.user_id
+		where r.store_seq=${param1} order by r.seq desc;
+</select>
+<select id="reservationDateSelect" resultType="eat_schedule.dto.ReservationDTO">
+	select r.seq ,r.reservation_time, r.number_of_people, r.user_id, u.user_name, r.coupon, u.phone_number, u.email, r.reservation_status, r.reservation_comment, r.visit_status
+		from reservation r
+		join user u on u.user_id=r.user_id
+		where r.store_seq=${param1} and r.reservation_time like '%${param2}%' order by r.seq desc;
+</select>
+<insert id="couponGift">
+	insert into coupon(user_id, expired_period, discount_rate, store_seq)
+	values(#{user_id}, #{expired_period}, ${discount_rate}, ${store_seq})
+</insert>
+<update id="ownerCommentAdd">
+	update review set owner_comment=#{owner_comment}, comment_time=now() where seq=${seq}
+</update>
+<update id="reservationCheck">
+	update reservation set reservation_status=#{reservation_status} where seq=${seq}
+</update>
+<select id="reviewSelectDetail" resultType="eat_schedule.dto.ReviewDTO">
+	select seq, store_seq, user_id, owner_id, score, review, review_time, owner_comment, comment_time, coupon_status from review where seq=${param1}
+</select>
+<select id="reservationSelectDetail" resultType="eat_schedule.dto.ReservationDTO">
+	select r.seq ,r.reservation_time, r.number_of_people, r.user_id, u.user_name, r.coupon, u.phone_number, u.email, r.reservation_status, r.reservation_comment, r.visit_status
+		from reservation r
+		join user u on u.user_id=r.user_id
+		where r.seq=${param1};
+</select>
+<update id="showCheck">
+	update reservation set reservation_status=#{reservation_status} where seq=${seq}
+</update>
+<update id="balloonGive">
+	update user set balloon=${param2} where user_id=#{param1}
+</update>
+<select id="balloonNowNumber" resultType="int">
+	select balloon from user where user_id=#{param1}
+</select>
+<update id="couponStatus">
+	update review set coupon_status=1 where seq=${param1}
+</update>
+<select id="noShowCheckNum" resultType="int">
+	select count(seq) from reservation where store_seq=${param1} and reservation_status="예약 완료";
+</select>
+<insert id="menuInsert" parameterType="eat_schedule.dto.MenuDTO" useGeneratedKeys="true" keyProperty="seq">
+	insert into menu(store_seq, menu_name, price, category, information, picture_location)
+	values(${store_seq}, #{menu_name}, ${price}, #{category}, #{information}, #{picture_location})
+</insert>
+<update id="pictureDirInsert">
+	update store set picture_location=#{picture_location} where seq=${seq}
+</update>
+<insert id="balloonListUpdate">
+	insert into balloon(user_id, use_get_time, balloon, content)
+	values(#{user_id}, now(), 8, #{content})
+</insert>
+<insert id="promotionInsert">
+	insert into promotion_list(store_seq, owner_id, list_date, district)
+	values(${store_seq}, #{owner_id}, #{list_date}, #{district})
+</insert>
+<select id="menuLoad" resultType="eat_schedule.dto.MenuDTO">
+	select * from menu where store_seq=${param1}
+</select>
+<select id="menuInfo" resultType="eat_schedule.dto.MenuDTO">
+	select * from menu where seq=${seq}
+</select>
+<update id="menuEditOk">
+	update menu set menu_name=#{menu_name}, price=${price}, category=#{category}, information=#{information}, picture_location=#{picture_location}
+	where seq=${seq}
+</update>
+<insert id="pictureInsert">
+	insert into picture(store_seq, filename) values(${store_seq}, #{filename})
+</insert>
+    <insert id="menuInsertMap"></insert>
+    <delete id="storeDelete">
+	delete from store where seq=${param1}
+</delete>
+<delete id="menuDelete">
+	delete from menu where seq=${param1}
+</delete>
+<select id="advList" resultType="eat_schedule.dto.PromotionListDTO">
+	select * from promotion_list where store_seq=${param1} order by list_date desc
+</select>
+<select id="fileList" resultType="eat_schedule.dto.FilenameDTO">
+	select * from picture where store_seq=${param1}
+</select>
+<delete id="deletePicture">
+	delete from picture where seq=${param1}
+</delete>
+<select id="selectPicture" resultType="eat_schedule.dto.FilenameDTO">
+	select * from picture where seq=${param1}
+</select>
+<select id="storePicture" resultType="eat_schedule.dto.FilenameDTO">
+	select * from picture where store_seq=${param1} order by seq limit 1;
+</select>
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eat_schedule.dao.ReviewDAO">
+	<select id="ReviewSelect" resultType="eat_schedule.dto.ReviewDTO">
+	 	select r.seq, r.store_seq, s.store_name, r.review_time, r.score, r.review, r.owner_comment, r.comment_time, r.coupon_status, r.file_location
+		from review r
+		join store s on s.seq=r.store_seq
+		where r.user_id=#{param1}
+	</select>
+	<insert id="ReviewInsert" parameterType="java.util.HashMap">
+		insert into review(store_seq, user_id, score, review, review_time, file_location)
+		values (#{store_seq}, #{id}, #{score}, #{review}, sysdate(), #{location})
+	</insert>
+	<select id="ReviewEdit" resultType="eat_schedule.dto.ReviewDTO">
+		select r.seq, r.store_seq, s.store_name, r.review_time, r.score, r.review, r.owner_comment, r.comment_time, r.file_location
+		from review r
+		join store s on s.seq=r.store_seq
+		where r.seq=#{param1}
+	</select>
+	<update id="ReviewEditUpdate" >
+		update review set score=#{score}, review=#{review}, file_location=#{file_location}, review_time=sysdate()
+		where seq=#{seq}
+	</update>
+	<delete id="ReviewDelete">
+		delete from review where seq=${seq}
+	</delete>
+
+	<select id ="AvgScore" resultType="double">
+		select round(avg(score),1) from review
+		where store_seq=#{store_seq}
+	</select>
+	<update id="AvgScoreUpdate" >
+		update wish_list
+		set avg_score=#{avg_score}
+		where store_seq=#{store_seq}
+	</update>
+	<update id="WishUpdate" >
+		update wish_list
+		set avg_score=${avg_score}, count=#{count}
+		where store_seq=#{store_seq}
+	</update>
+    <select id="ReviewCount" resultType="int">
+		select count(*) from review
+		where store_seq=#{store_seq}
+	</select>
+</mapper>
