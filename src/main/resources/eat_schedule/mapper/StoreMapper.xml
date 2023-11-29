@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eat_schedule.mapper.StoreMapper">
+
+    <select id="findAllScore" resultType="eat_schedule.dto.Store">
+        select distinct store.seq, store.owner_id, store_name, location, tel_number, store.owner_comment, open_time, close_time, how_to_come, parking, wifi,animal, group_customer, playroom, disabled, ROUND(IFNULL(AVG(review.score), 0), 1) AS score
+        from store
+        left outer join review on store.seq=review.store_seq
+        <where>
+            <if test="district != null and district !=''">
+                and district = #{param1}
+            </if>
+            <if test="category != null and category !=''">
+                and category = #{param2}
+            </if>
+            <if test="name != null and name !=''">
+                and store.store_name LIKE CONCAT('%',#{param3},'%')
+            </if>
+        </where>
+        GROUP BY store.seq
+        order By score DESC
+    </select>
+    <select id="findAllReview" resultType="eat_schedule.dto.Store">
+        select distinct store.seq, store.owner_id, store_name, location, tel_number, store.owner_comment, open_time, close_time, how_to_come, parking, wifi,animal, group_customer, playroom, disabled, count(review.seq) as review, ROUND(IFNULL(AVG(review.score), 0), 1) AS score
+        from store
+        left outer join review on store.seq=review.store_seq
+        <where>
+            <if test="district != null and district !=''">
+                and district = #{param1}
+            </if>
+            <if test="category != null and category !=''">
+                and category = #{param2}
+            </if>
+            <if test="name != null and name !=''">
+                and store_name LIKE CONCAT('%',#{param3},'%')
+            </if>
+        </where>
+        GROUP BY store.seq
+        order By review DESC
+    </select>
+    <select id="findAllWish" resultType="eat_schedule.dto.Store">
+        select distinct store.seq, store.owner_id, store_name, location, tel_number, store.owner_comment, open_time, close_time, how_to_come, parking, wifi,animal, group_customer, playroom, disabled, count(wish_list.seq) as wish, ROUND(IFNULL(AVG(review.score), 0), 1) AS score
+        from store
+        right join wish_list on store.seq=wish_list.store_seq
+        left outer join review on store.seq=review.store_seq
+        <where>
+            <if test="district != null and district !=''">
+                and district = #{param1}
+            </if>
+            <if test="category != null and category !=''">
+                and category = #{param2}
+            </if>
+            <if test="name != null and name !=''">
+                and store_name LIKE CONCAT('%', #{param3}, '%')
+            </if>
+        </where>
+        GROUP BY store.seq
+        order By wish DESC
+    </select>
+    <select id="findStore" resultType="eat_schedule.dto.Store">
+        select store.seq, store.owner_id, store_name, location, tel_number, store.owner_comment, open_time, close_time, how_to_come, parking, wifi,animal, group_customer, playroom, disabled, ROUND(IFNULL(AVG(review.score), 0), 1) AS score
+        from store
+        left outer join review on store.seq=review.store_seq
+        where store.seq = #{param1}
+    </select>
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eat_schedule.mapper.ReservationMapper">
+
+
+    <insert id="insertReservation">
+        insert into reservation (store_seq, user_id, number_of_people, coupon, reservation_time, reservation_status, reservation_comment)
+        values (#{store_seq}, #{user_id}, #{number_of_people}, #{coupon}, #{reservation_time}, #{reservation_status}, #{reservation_comment})
+    </insert>
+    <insert id="balloonHistoryUpdate">
+        insert into balloon (user_id, use_get_time, balloon, content)
+        values (#{user_id}, now(), -5, '예약')
+    </insert>
+    <update id="updateReservation">
+        update store set
+            reservation = reservation + 1
+        where seq=#{store_seq}
+    </update>
+    <update id="balloonUpdate">
+        update user
+        set balloon = balloon-5
+        where user_id=#{user_id}
+    </update>
+    <select id="findReservationLeft" resultType="eat_schedule.dto.ReservationLeft">
+        select store_seq, reservation_time, reservation_date, people from reservation_left where store_seq=#{seq}
+    </select>
+
+</mapper>

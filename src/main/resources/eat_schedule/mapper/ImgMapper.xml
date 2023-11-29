@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eat_schedule.mapper.ImgMapper">
+
+    <select id="findImg" resultType="java.lang.String">
+        select filename from picture where store_seq=#{seq}
+    </select>
+    <select id="findMainImg" resultType="java.lang.String">
+        select distinct filename from picture where store_seq=#{seq} LIMIT 1
+    </select>
+
+</mapper>

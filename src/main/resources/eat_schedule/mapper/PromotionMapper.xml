@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eat_schedule.mapper.PromotionMapper">
+
+    <select id="findAll" resultType="eat_schedule.dto.Store">
+        SELECT DISTINCT store.seq, store.owner_id, store_name, location, tel_number, store.owner_comment,
+                        open_time, close_time, how_to_come, parking, wifi, animal, group_customer, playroom, disabled,
+                        ROUND(AVG(review.score), 1) AS score
+        FROM store
+                 LEFT JOIN review ON store.seq = review.store_seq
+        WHERE store.seq = (
+            SELECT store_seq
+            FROM promotion_list
+            WHERE district = #{district} AND list_date = #{today}
+        );
+    </select>
+
+</mapper>

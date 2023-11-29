@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eat_schedule.mapper.WishMapper">
+
+
+    <insert id="WishOn">
+        INSERT INTO wish_list (user_id, store_seq)
+        VALUES (#{user_id}, #{seq})
+    </insert>
+    <delete id="WishOff">
+        delete from wish_list where user_id=#{user_id} and store_seq=#{seq}
+    </delete>
+</mapper>
